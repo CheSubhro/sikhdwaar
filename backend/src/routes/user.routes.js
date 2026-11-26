@@ -1,23 +1,27 @@
 
 import { Router } from "express";
-import { upload } from "../middlewares/multer.middleware.js";
-import { registerUser } from "../controllers/user.controller.js";
 
+import {
+    loginUser,
+    logoutUser,
+    getCurrentUser,
+    refreshAccessToken,
+} from "../controllers/user.controller.js";
 
-const router = Router()
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
-router.route("/register").post(
-    upload.fields([
-        {
-            name: "avatar",
-            maxCount: 1
-        },
-        {
-            name: "coverImage",
-            maxCount: 1
-        }
-    ]),
-    registerUser
-)
+const router = Router();
 
-export default router
+// Admin Login - Public Route
+router.route("/login").post(loginUser);
+
+// Admin Logout - Protected Route
+router.route("/logout").post(verifyJWT, logoutUser);
+
+// Get Current Admin - Protected Route
+router.route("/me").get(verifyJWT, getCurrentUser);
+
+// Refresh Access Token - Public Route
+router.route("/refresh-token").post(refreshAccessToken);
+
+export default router;

@@ -1,10 +1,12 @@
+
+
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 
-// Define the schema for the user
+// Define the schema for the admin user
 const userSchema = new Schema(
     {
-        // Username field
+        // Admin username
         username: {
             type: String,
             required: true,
@@ -13,7 +15,8 @@ const userSchema = new Schema(
             trim: true,
             index: true
         },
-        // Email field
+
+        // Admin email
         email: {
             type: String,
             required: true,
@@ -21,52 +24,69 @@ const userSchema = new Schema(
             lowercase: true,
             trim: true
         },
-        // Full name field
+
+        // Admin full name
         fullName: {
             type: String,
             required: true,
             trim: true,
             index: true
         },
-        // Avatar field (cloudinary URL)
+
+        // Optional avatar image
         avatar: {
             type: String,
-            required: true
+            default: null
         },
-        // Cover image field (cloudinary URL)
+
+        // Optional cover image
         coverImage: {
-            type: String
+            type: String,
+            default: null
         },
-        // Watch history field (array of Video references)
-        watchHistory: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Video"
-            }
-        ],
-        // Password field (hashed)
+
+        // Hashed password
         password: {
             type: String,
-            required: [true, 'Password is required']
+            required: [true, "Password is required"],
+            minlength: 8
         },
-        // Refresh token field
+
+        // Admin role
+        role: {
+            type: String,
+            enum: ["superadmin", "admin", "editor"],
+            default: "admin"
+        },
+
+        // Account status
+        isActive: {
+            type: Boolean,
+            default: true
+        },
+
+        // Refresh token
         refreshToken: {
-            type: String
+            type: String,
+            default: null
         }
     },
-    // Additional options
     {
-        timestamps: true // Adds createdAt and updatedAt fields
+        timestamps: true
     }
 );
 
-// Middleware function to hash the password before saving
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
+// Hash password before saving
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
 
     this.password = await bcrypt.hash(this.password, 10);
-    next();
 });
+
+// Compare password
+userSchema.methods.isPasswordCorrect = async function (password) {
+    return await bcrypt.compare(password, this.password);
+};
 
 // Create and export the User model
 export const User = mongoose.model("User", userSchema);
