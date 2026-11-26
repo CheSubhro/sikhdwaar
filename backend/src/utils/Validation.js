@@ -315,3 +315,91 @@ export const updatePostSchema = postBaseSchema.partial().refine(
 );
 
 
+
+/* =========================================
+   Gallery Management Validation
+========================================= */
+
+// Create Gallery Validation
+export const createGallerySchema = z.object({
+    title: z.string()
+        .trim()
+        .max(200, "Title cannot exceed 200 characters")
+        .optional(),
+
+    caption: z.string()
+        .trim()
+        .max(500, "Caption cannot exceed 500 characters")
+        .optional(),
+
+    description: z.string().optional(),
+
+    altText: z.string()
+        .trim()
+        .max(250, "Alt text cannot exceed 250 characters")
+        .optional(),
+
+    category: z.string()
+        .trim()
+        .optional(),
+
+    album: z.string()
+        .trim()
+        .optional(),
+
+    tags: z.array(z.string().trim()).optional(),
+
+    displayOrder: z.coerce.number()
+        .int("Display order must be an integer")
+        .min(0, "Display order cannot be negative")
+        .optional(),
+
+    status: z.enum(["draft", "published"]).optional(),
+
+    isFeatured: z.boolean().optional(),
+
+    publishedAt: z.coerce.date().optional(),
+});
+
+// Update Gallery Validation
+export const updateGallerySchema = z.object({
+    title: z.string()
+        .trim()
+        .max(200, "Title cannot exceed 200 characters")
+        .optional(),
+
+    caption: z.string()
+        .trim()
+        .max(500, "Caption cannot exceed 500 characters")
+        .optional(),
+
+    description: z.string().optional(),
+
+    altText: z.string()
+        .trim()
+        .max(250, "Alt text cannot exceed 250 characters")
+        .optional(),
+
+    category: z.string()
+        .trim()
+        .optional(),
+
+    album: z.string()
+        .trim()
+        .optional(),
+
+    tags: z.array(z.string().trim()).optional(),
+
+    displayOrder: z.coerce.number()
+        .int("Display order must be an integer")
+        .min(0, "Display order cannot be negative")
+        .optional(),
+
+    status: z.enum(["draft", "published"]).optional(),
+
+    isFeatured: z.boolean().optional(),
+
+    publishedAt: z.coerce.date().optional(),
+});
+
+
