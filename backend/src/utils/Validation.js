@@ -74,8 +74,7 @@ export const updateUserSchema = z.object({
 });
 
 // Change password validation
-export const changePasswordSchema = z
-    .object({
+export const changePasswordSchema = z.object({
         currentPassword: z.string().min(1, "Current password is required"),
 
         newPassword: z
@@ -87,3 +86,71 @@ export const changePasswordSchema = z
         message: "New password must be different from current password",
         path: ["newPassword"],
     });
+
+// Gurudwara Management Validation
+
+const addressSchema = z.object({
+    addressLine: z.string().trim().optional(),
+    village: z.string().trim().optional(),
+    city: z.string().trim().optional(),
+    district: z.string().trim().optional(),
+    state: z.string().trim().optional(),
+    country: z.string().trim().optional(),
+    pincode: z.string().trim().optional(),
+});
+
+const gurudwaraContactSchema = z.object({
+    phone: z.string().trim().optional(),
+    email: z.string().trim().email().optional().or(z.literal("")),
+    website: z.string().trim().optional(),
+});
+
+const gurudwaraLocationSchema = z.object({
+    coordinates: z.array(z.number()).length(2).refine(
+        ([longitude, latitude]) =>
+            longitude >= -180 &&
+            longitude <= 180 &&
+            latitude >= -90 &&
+            latitude <= 90,
+        "Invalid longitude or latitude"
+    ),
+});
+
+const visitingHourSchema = z.object({
+    day: z.enum([
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]),
+    openingTime: z.string().optional(),
+    closingTime: z.string().optional(),
+    isClosed: z.boolean().optional(),
+});
+
+export const createGurudwaraSchema = z.object({
+    name: z.string().trim().min(3).max(150),
+    slug: z.string().trim().optional(),
+    shortDescription: z.string().trim().max(500).optional(),
+    description: z.string().optional(),
+    history: z.string().optional(),
+    religiousSignificance: z.string().optional(),
+    architecture: z.string().optional(),
+    address: addressSchema.optional(),
+    contact: gurudwaraContactSchema.optional(),
+    location: gurudwaraLocationSchema.optional(),
+    visitingHours: z.array(visitingHourSchema).optional(),
+    facilities: z.array(z.string().trim()).optional(),
+    status: z.enum(["draft", "published"]).optional(),
+    isFeatured: z.boolean().optional(),
+});
+
+export const updateGurudwaraSchema = createGurudwaraSchema
+    .omit({ name: true })
+    .extend({
+        name: z.string().trim().min(3).max(150).optional(),
+    })
+    .partial();    

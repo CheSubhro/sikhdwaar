@@ -18,11 +18,13 @@ app.use(cookieParser())
 
 //routes import
 import userRouter from './routes/user.routes.js'
-import adminRouter from "./routes/admin.routes.js";
+import adminRouter from "./routes/admin.routes.js"
+import gurudwaraRouter from "./routes/gurudwara.routes.js"
 
 //routes declaration
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/admin", adminRouter);
+app.use("/api/v1/gurudwaras", gurudwaraRouter);
 
 
 export { app }
