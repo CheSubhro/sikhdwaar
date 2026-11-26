@@ -219,3 +219,99 @@ export const updateGuruSchema = createGuruSchema
         guruNumber: z.coerce.number().int().min(1).max(10).optional(),
     })
     .partial();
+
+
+
+/* =========================================
+   Post Management Validation
+========================================= */
+
+// Event Details Validation
+const eventDetailsSchema = z.object({
+    startDate: z.coerce.date().optional(),
+    endDate: z.coerce.date().optional(),
+    location: z.string().trim().optional(),
+    registrationUrl: z.string()
+        .trim()
+        .url("Invalid registration URL")
+        .optional()
+        .or(z.literal("")),
+}).refine(
+    (data) => {
+        if (data.startDate && data.endDate) {
+            return data.endDate >= data.startDate;
+        }
+        return true;
+    },
+    {
+        message: "Event end date cannot be before start date",
+        path: ["endDate"],
+    }
+);
+
+// SEO Validation
+const seoSchema = z.object({
+    metaTitle: z.string().trim().max(70).optional(),
+    metaDescription: z.string().trim().max(160).optional(),
+    keywords: z.array(z.string().trim()).optional(),
+});
+
+// Base Post Schema
+const postBaseSchema = z.object({
+    title: z.string()
+        .trim()
+        .min(3, "Post title must be at least 3 characters")
+        .max(200, "Post title cannot exceed 200 characters"),
+
+    slug: z.string().trim().optional(),
+
+    type: z.enum(["article", "news", "event"]),
+
+    excerpt: z.string().trim().max(500).optional(),
+
+    content: z.string().trim().min(1, "Post content is required"),
+
+    category: z.string().trim().optional(),
+
+    tags: z.array(z.string().trim()).optional(),
+
+    eventDetails: eventDetailsSchema.optional(),
+
+    status: z.enum(["draft", "published"]).optional(),
+
+    isFeatured: z.boolean().optional(),
+
+    publishedAt: z.coerce.date().optional(),
+
+    seo: seoSchema.optional(),
+});
+
+// Create Post Validation
+export const createPostSchema = postBaseSchema.refine(
+    (data) => {
+        if (data.type === "event") {
+            return !!data.eventDetails?.startDate;
+        }
+        return true;
+    },
+    {
+        message: "Event start date is required for event posts",
+        path: ["eventDetails", "startDate"],
+    }
+);
+
+// Update Post Validation
+export const updatePostSchema = postBaseSchema.partial().refine(
+    (data) => {
+        if (data.type === "event") {
+            return !!data.eventDetails?.startDate;
+        }
+        return true;
+    },
+    {
+        message: "Event start date is required for event posts",
+        path: ["eventDetails", "startDate"],
+    }
+);
+
+
