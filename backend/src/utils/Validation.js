@@ -153,4 +153,69 @@ export const updateGurudwaraSchema = createGurudwaraSchema
     .extend({
         name: z.string().trim().min(3).max(150).optional(),
     })
-    .partial();    
+    .partial();   
+    
+    
+
+// Guru Management Validation
+
+
+// Family Details Validation
+const guruFamilySchema = z.object({
+    father: z.string().trim().optional(),
+    mother: z.string().trim().optional(),
+    spouse: z.string().trim().optional(),
+    children: z.array(z.string().trim()).optional(),
+});
+
+// Important Events Validation
+const guruEventSchema = z.object({
+    title: z.string().trim().min(1, "Event title is required"),
+    date: z.string().trim().optional(),
+    description: z.string().optional(),
+});
+
+// Create Guru Validation
+export const createGuruSchema = z.object({
+    name: z.string().trim().min(3, "Guru name must be at least 3 characters").max(150),
+
+    slug: z.string().trim().optional(),
+
+    guruNumber: z.coerce.number().int().min(1).max(10),
+
+    title: z.string().trim().optional(),
+
+    shortDescription: z.string().trim().max(500).optional(),
+
+    biography: z.string().optional(),
+
+    teachings: z.array(z.string().trim()).optional(),
+
+    contributions: z.array(z.string().trim()).optional(),
+
+    birthDate: z.string().trim().optional(),
+
+    deathDate: z.string().trim().optional(),
+
+    birthPlace: z.string().trim().optional(),
+
+    family: guruFamilySchema.optional(),
+
+    gurushipStartDate: z.string().trim().optional(),
+
+    gurushipEndDate: z.string().trim().optional(),
+
+    importantEvents: z.array(guruEventSchema).optional(),
+
+    status: z.enum(["draft", "published"]).optional(),
+
+    isFeatured: z.boolean().optional(),
+});
+
+// Update Guru Validation
+export const updateGuruSchema = createGuruSchema
+    .omit({ guruNumber: true })
+    .extend({
+        guruNumber: z.coerce.number().int().min(1).max(10).optional(),
+    })
+    .partial();

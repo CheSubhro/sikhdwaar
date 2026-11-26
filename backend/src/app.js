@@ -20,11 +20,13 @@ app.use(cookieParser())
 import userRouter from './routes/user.routes.js'
 import adminRouter from "./routes/admin.routes.js"
 import gurudwaraRouter from "./routes/gurudwara.routes.js"
+import guruRouter from "./routes/guru.routes.js";
 
 //routes declaration
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/gurudwaras", gurudwaraRouter);
+app.use("/api/v1/gurus", guruRouter);
 
 
 export { app }
