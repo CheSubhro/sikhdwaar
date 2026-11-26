@@ -1,42 +1,55 @@
 
 
-import React, { forwardRef } from 'react';
-import { Input as ChakraInput, Field } from '@chakra-ui/react';
+import { TextInput } from "@mantine/core";
 
-
-const Input = forwardRef(({ label, error, helperText, ...props }, ref) => {
+function Input({
+    label,
+    placeholder,
+    value,
+    onChange,
+    type = "text",
+    error,
+    description,
+    required = false,
+    disabled = false,
+    size = "md",
+    ...props
+}) {
     return (
-        <Field.Root invalid={!!error} mb="4">
-            
-            {label && (
-                <Field.Label fontWeight="600" mb="1">
-                    {label}
-                </Field.Label>
-            )}
-            
-            <ChakraInput
-                ref={ref} 
-                _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px #3182ce" }}
-                _invalid={{ borderColor: "red.500", boxShadow: "0 0 0 1px #e53e3e" }}
-                {...props}
-            />
-
-            {error && (
-                <Field.ErrorText color="red.500" fontSize="sm" mt="1">
-                    {error}
-                </Field.ErrorText>
-            )}
-
-            {!error && helperText && (
-                <Field.HelperText color="gray.500" fontSize="xs" mt="1">
-                    {helperText}
-                </Field.HelperText>
-            )}
-            
-        </Field.Root>
+        <TextInput
+            label={label}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            type={type}
+            error={error}
+            description={description}
+            required={required}
+            disabled={disabled}
+            size={size}
+            radius="md"
+            withAsterisk={required}
+            styles={{
+                label: {
+                    fontFamily: "Geom, sans-serif",
+                    fontWeight: 600,
+                    marginBottom: 6,
+                },
+                input: {
+                    fontFamily: "Geom, sans-serif",
+                    borderColor: "#dce1e7",
+                    transition: "all 180ms ease",
+                },
+                description: {
+                    fontFamily: "Geom, sans-serif",
+                },
+                error: {
+                    fontFamily: "Geom, sans-serif",
+                },
+            }}
+            {...props}
+        />
     );
-});
-
-Input.displayName = 'Input';
+}
 
 export default Input;

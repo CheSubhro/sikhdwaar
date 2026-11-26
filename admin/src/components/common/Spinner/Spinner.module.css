@@ -1,0 +1,107 @@
+.loader {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    animation: spinnerRotate 2.2s linear infinite;
+}
+
+.track {
+    fill: none;
+    stroke: #f3e5df;
+    stroke-width: 4;
+}
+
+.progress {
+    fill: none;
+    stroke: var(--spinner-color, #e06538);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 72 120;
+    transform-origin: center;
+    animation: spinnerDash 1.5s ease-in-out infinite;
+}
+
+.innerTrack {
+    fill: none;
+    stroke: var(--spinner-color, #e06538);
+    stroke-width: 2;
+    opacity: 0.15;
+}
+
+.dot {
+    fill: var(--spinner-color, #e06538);
+    transform-origin: center;
+    animation: spinnerPulse 1.2s ease-in-out infinite;
+}
+
+.fullScreen {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.overlayContainer {
+    position: relative;
+    min-height: 140px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.overlayContent {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+@keyframes spinnerRotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinnerDash {
+    0% {
+        stroke-dasharray: 5 120;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 75 120;
+        stroke-dashoffset: -25;
+    }
+
+    100% {
+        stroke-dasharray: 5 120;
+        stroke-dashoffset: -125;
+    }
+}
+
+@keyframes spinnerPulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: scale(0.75);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .svg,
+    .progress,
+    .dot {
+        animation-duration: 3s;
+    }
+}

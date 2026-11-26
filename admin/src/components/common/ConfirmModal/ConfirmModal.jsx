@@ -1,78 +1,69 @@
 
-import React from 'react';
-import { Dialog, Button, HStack, Text } from '@chakra-ui/react';
 
-const ConfirmModal = ({
-    isOpen,
+import { Group, Stack, Text } from "@mantine/core";
+import { IconAlertTriangle } from "@tabler/icons-react";
+
+import Modal from "../Modal";
+import Button from "../Button";
+
+function ConfirmModal({
+    opened,
     onClose,
     onConfirm,
-    title = "Are you sure?",
-    children,
+    title = "Confirm Action",
+    message = "Are you sure you want to continue?",
     confirmText = "Confirm",
     cancelText = "Cancel",
     loading = false,
-    ...props
-}) => {
+    danger = false,
+}) {
+    const handleConfirm = async () => {
+        await onConfirm?.();
+    };
+
     return (
-        <Dialog.Root 
-            open={isOpen} 
-            onOpenChange={(e) => !e.open && onClose?.()}
-            closeOnInteractOutside={false}
+        <Modal
+            opened={opened}
+            onClose={onClose}
+            title={title}
             size="sm"
-            {...props}
         >
-            <Dialog.Backdrop />
-            
-            <Dialog.Positioner>
-                <Dialog.Content borderRadius="xl" p="4" bg="white" boxShadow="2xl">
-                    
-                    {/* Modal Header & Title */}
-                    <Dialog.Header>
-                        <Dialog.Title fontWeight="bold" fontSize="lg" color="red.600">
-                            ⚠️ {title}
-                        </Dialog.Title>
-                    </Dialog.Header>
+            <Stack gap="lg">
+                <Group align="flex-start" gap="sm" wrap="nowrap">
+                    <IconAlertTriangle
+                        size={24}
+                        color={danger ? "#e03131" : "#e06538"}
+                    />
 
-                    {/* Modal Body Content */}
-                    <Dialog.Body py="3">
-                        <Text color="gray.600" fontSize="sm">
-                            {children || "Do you really want to perform this action? This process cannot be undone."}
-                        </Text>
-                    </Dialog.Body>
+                    <Text
+                        size="sm"
+                        c="dimmed"
+                        style={{ fontFamily: "Geom, sans-serif" }}
+                    >
+                        {message}
+                    </Text>
+                </Group>
 
-                    {/* Modal Footer Action Buttons */}
-                    <Dialog.Footer mt="4">
-                        <HStack spaceX="3" justify="flex-end" w="100%">
-                            {/* Cancel Button */}
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
-                                onClick={onClose}
-                                disabled={loading}
-                                cursor="pointer"
-                            >
-                                {cancelText}
-                            </Button>
-                            
-                            {/* Confirm Button */}
-                            <Button 
-                                bg="red.600" 
-                                color="white" 
-                                size="sm" 
-                                onClick={onConfirm}
-                                loading={loading}
-                                _hover={{ bg: "red.700" }}
-                                cursor="pointer"
-                            >
-                                {confirmText}
-                            </Button>
-                        </HStack>
-                    </Dialog.Footer>
+                <Group justify="flex-end" gap="sm">
+                    <Button
+                        variant="outline"
+                        onClick={onClose}
+                        disabled={loading}
+                    >
+                        {cancelText}
+                    </Button>
 
-                </Dialog.Content>
-            </Dialog.Positioner>
-        </Dialog.Root>
+                    <Button
+                        variant={danger ? "danger" : "primary"}
+                        onClick={handleConfirm}
+                        loading={loading}
+                    >
+                        {confirmText}
+                    </Button>
+                </Group>
+            </Stack>
+        </Modal>
     );
-};
+}
 
 export default ConfirmModal;

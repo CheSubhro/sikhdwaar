@@ -1,22 +1,36 @@
 
-import React from 'react';
-import { Tooltip as ChakraTooltip } from '@chakra-ui/react';
 
-const Tooltip = ({ label, children, ...props }) => {
+import { Tooltip as MantineTooltip } from "@mantine/core";
+
+function Tooltip({
+    children,
+    label,
+    position = "top",
+    withArrow = true,
+    openDelay = 300,
+    disabled = false,
+    ...props
+}) {
     return (
-        <ChakraTooltip 
-            label={label} 
-            hasArrow 
-            placement="top" 
-            bg="gray.700" 
-            color="white"
-            borderRadius="md"
+        <MantineTooltip
+            label={label}
+            position={position}
+            withArrow={withArrow}
+            openDelay={openDelay}
+            disabled={disabled}
+            color="dark"
+            styles={{
+                tooltip: {
+                    fontFamily: "Geom, sans-serif",
+                    fontSize: 12,
+                    fontWeight: 500,
+                },
+            }}
             {...props}
         >
-            {/* Tooltip wrapping children must be a single element */}
-            <span>{children}</span>
-        </ChakraTooltip>
+            {children}
+        </MantineTooltip>
     );
-};
+}
 
 export default Tooltip;

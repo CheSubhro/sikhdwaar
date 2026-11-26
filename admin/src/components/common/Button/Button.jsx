@@ -1,33 +1,73 @@
 
-import React from 'react';
-import { Button as ChakraButton } from '@chakra-ui/react';
+import { Button as MantineButton } from "@mantine/core";
+import { Loader } from "@mantine/core";
 
-/**
- * @param {string} variant - 'solid', 'outline', 'ghost', 'link'
- * @param {string} colorScheme - 'blue', 'red', 'green', etc.
- * @param {boolean} isLoading - Loading spinner dekhabor jonno
- * @param {any} leftIcon - Button-er bame icon thakle
- */
-const Button = ({ 
-    children, 
-    variant = 'solid', 
-    colorScheme = 'blue', 
-    isLoading = false, 
-    leftIcon, 
-    ...props 
-}) => {
+function Button({
+    children,
+    variant = "primary",
+    size = "md",
+    leftIcon,
+    rightIcon,
+    loading = false,
+    disabled = false,
+    fullWidth = false,
+    type = "button",
+    onClick,
+    className,
+    ...props
+}) {
+    const variantStyles = {
+        primary: {
+            variant: "filled",
+            color: "brand",
+        },
+        secondary: {
+            variant: "filled",
+            color: "gray",
+        },
+        outline: {
+            variant: "outline",
+            color: "brand",
+        },
+        danger: {
+            variant: "filled",
+            color: "red",
+        },
+        ghost: {
+            variant: "subtle",
+            color: "brand",
+        },
+    };
+
+    const selectedVariant =
+        variantStyles[variant] || variantStyles.primary;
+
     return (
-        <ChakraButton
-            variant={variant}
-            colorScheme={colorScheme}
-            isLoading={isLoading}
-            leftIcon={leftIcon}
-            // General props (onClick, type, disabled, etc.)
+        <MantineButton
+            type={type}
+            size={size}
+            variant={selectedVariant.variant}
+            color={selectedVariant.color}
+            fullWidth={fullWidth}
+            loading={loading}
+            disabled={disabled || loading}
+            leftSection={!loading ? leftIcon : undefined}
+            rightSection={!loading ? rightIcon : undefined}
+            loaderProps={{ type: "dots" }}
+            onClick={onClick}
+            className={className}
+            styles={{
+                root: {
+                    fontFamily: "Geom, sans-serif",
+                    fontWeight: 600,
+                    transition: "all 180ms ease",
+                },
+            }}
             {...props}
-            >
+        >
             {children}
-        </ChakraButton>
+        </MantineButton>
     );
-};
+}
 
 export default Button;

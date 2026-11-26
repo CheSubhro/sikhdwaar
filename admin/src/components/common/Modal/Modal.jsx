@@ -1,57 +1,48 @@
 
-import React from 'react';
-import { Dialog } from '@chakra-ui/react';
 
-const Modal = ({ 
-    isOpen, 
-    onClose, 
-    title, 
-    children, 
-    footer, 
-    size = 'md', 
-    ...props 
-}) => {
+import { Modal as MantineModal } from "@mantine/core";
+
+function Modal({
+    opened,
+    onClose,
+    title,
+    children,
+    size = "lg",
+    centered = true,
+    closeOnClickOutside = false,
+    ...props
+}) {
     return (
-        <Dialog.Root 
-            open={isOpen} 
-            onOpenChange={(e) => !e.open && onClose?.()} 
-            size={size} 
-            motionPreset="slide-in-bottom"
+        <MantineModal
+            opened={opened}
+            onClose={onClose}
+            title={title}
+            size={size}
+            centered={centered}
+            closeOnClickOutside={closeOnClickOutside}
+            overlayProps={{
+                backgroundOpacity: 0.55,
+                blur: 2,
+            }}
+            radius="lg"
+            styles={{
+                title: {
+                    fontFamily: "Geom, sans-serif",
+                    fontWeight: 700,
+                    fontSize: 18,
+                },
+                body: {
+                    fontFamily: "Geom, sans-serif",
+                },
+                header: {
+                    borderBottom: "1px solid #e5e7eb",
+                },
+            }}
             {...props}
         >
-            <Dialog.Backdrop />
-            
-            <Dialog.Positioner>
-                <Dialog.Content borderRadius="xl" boxShadow="2xl" p="2">
-                    
-                    {/* Header and Title Section */}
-                    {title && (
-                        <Dialog.Header>
-                            <Dialog.Title fontWeight="bold" fontSize="lg" color="slate.800">
-                                {title}
-                            </Dialog.Title>
-                        </Dialog.Header>
-                    )}
-                    
-                    {/* 🆕 Dialog.CloseTrigger replaces ModalCloseButton */}
-                    <Dialog.CloseTrigger position="absolute" top="4" right="4" cursor="pointer" />
-                    
-                    {/* 🆕 Dialog.Body replaces ModalBody */}
-                    <Dialog.Body pb="6" pt="2">
-                        {children}
-                    </Dialog.Body>
-                    
-                    {/* 🆕 Dialog.Footer replaces ModalFooter */}
-                    {footer && (
-                        <Dialog.Footer borderTop="1px solid" borderColor="gray.100" pt="4">
-                            {footer}
-                        </Dialog.Footer>
-                    )}
-                    
-                </Dialog.Content>
-            </Dialog.Positioner>
-        </Dialog.Root>
+            {children}
+        </MantineModal>
     );
-};
+}
 
 export default Modal;

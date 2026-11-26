@@ -1,39 +1,48 @@
 
-import React from 'react';
-import { Badge as ChakraBadge } from '@chakra-ui/react';
 
-const Badge = ({ variant, status, children, ...props }) => {
-    const rawKey = (variant || status || 'info').toLowerCase();
+import { Badge as MantineBadge } from "@mantine/core";
 
-    const activeKey = rawKey === 'inactive' ? 'warning' : rawKey;
+const statusColors = {
+    active: "green",
+    approved: "green",
+    published: "green",
+    pending: "yellow",
+    draft: "gray",
+    rejected: "red",
+    inactive: "gray",
+    suspended: "red",
+    featured: "brand",
+};
 
-    const colorSchemes = {
-        success: { bg: 'green.50', color: 'green.700', border: '1px solid', borderColor: 'green.200' },
-        danger: { bg: 'red.50', color: 'red.700', border: '1px solid', borderColor: 'red.200' },
-        error: { bg: 'red.50', color: 'red.700', border: '1px solid', borderColor: 'red.200' },
-        warning: { bg: 'amber.50', color: 'amber.700', border: '1px solid', borderColor: 'amber.200' }, // 👈 ইনঅ্যাক্টিভ এখন এই কালার পাবে
-        info: { bg: 'blue.50', color: 'blue.700', border: '1px solid', borderColor: 'blue.200' },
-    };
-
-    const styles = colorSchemes[activeKey] || { bg: 'gray.50', color: 'gray.600', border: '1px solid', borderColor: 'gray.200' };
+function Badge({
+    children,
+    status,
+    color,
+    variant = "light",
+    size = "md",
+    ...props
+}) {
+    const badgeColor =
+        color || statusColors[String(status || "").toLowerCase()] || "gray";
 
     return (
-        <ChakraBadge
-            {...styles}
-            px="2.5"
-            py="0.5"
-            borderRadius="full"
-            fontSize="xs"
-            fontWeight="semibold"
-            letterSpacing="wider"
-            textTransform="uppercase"
-            display="inline-flex"
-            alignItems="center"
+        <MantineBadge
+            color={badgeColor}
+            variant={variant}
+            size={size}
+            radius="sm"
+            styles={{
+                root: {
+                    fontFamily: "Geom, sans-serif",
+                    fontWeight: 600,
+                    textTransform: "capitalize",
+                },
+            }}
             {...props}
         >
-            {children}
-        </ChakraBadge>
+            {children || status}
+        </MantineBadge>
     );
-};
+}
 
 export default Badge;

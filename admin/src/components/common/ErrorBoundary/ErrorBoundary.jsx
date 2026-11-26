@@ -1,52 +1,84 @@
-import React, { Component } from 'react';
-import { Box, Heading, Text, Button, VStack } from '@chakra-ui/react';
+
+
+import { Component } from "react";
+import { Center, Stack, Text, ThemeIcon } from "@mantine/core";
+import { IconAlertTriangle, IconRefresh } from "@tabler/icons-react";
+
+import Button from "../Button";
 
 class ErrorBoundary extends Component {
     constructor(props) {
         super(props);
-        this.state = { hasError: false, error: null };
+
+        this.state = {
+            hasError: false,
+        };
     }
 
-    // Updates the state so the next render will show the fallback UI
-    static getDerivedStateFromError(error) {
-        return { hasError: true, error };
+    static getDerivedStateFromError() {
+        return {
+            hasError: true,
+        };
     }
 
-    // Used for logging error details (e.g., to console or error tracking services like Sentry)
     componentDidCatch(error, errorInfo) {
-        console.error("ErrorBoundary caught an error:", error, errorInfo);
+        console.error("SikhDwaar UI Error:", error, errorInfo);
+
+        this.props.onError?.(error, errorInfo);
     }
+
+    handleReset = () => {
+        this.setState({ hasError: false });
+        this.props.onReset?.();
+    };
 
     render() {
         if (this.state.hasError) {
-            // Renders the fallback UI when an unexpected error occurs
+            if (this.props.fallback) {
+                return this.props.fallback;
+            }
+
             return (
-                <Box 
-                    display="flex" 
-                    alignItems="center" 
-                    justifyContent="center" 
-                    minH="100vh" 
-                    p={5}
-                >
-                    <VStack spacing={4} textAlign="center">
-                        <Heading as="h2" size="xl" color="red.500">
-                            Oops! Something went wrong.
-                        </Heading>
-                        <Text fontSize="lg" color="gray.600">
-                            We encountered an unexpected error. Please try refreshing the page.
-                        </Text>
-                        <Button 
-                            colorScheme="blue" 
-                            onClick={() => window.location.reload()}
+                <Center p="xl" mih={300}>
+                    <Stack align="center" gap="md" ta="center">
+                        <ThemeIcon
+                            size={70}
+                            radius="xl"
+                            color="red"
+                            variant="light"
                         >
-                            Reload Page
+                            <IconAlertTriangle size={36} />
+                        </ThemeIcon>
+
+                        <Text
+                            size="xl"
+                            fw={700}
+                            style={{ fontFamily: "Geom, sans-serif" }}
+                        >
+                            Something went wrong!
+                        </Text>
+
+                        <Text
+                            size="sm"
+                            c="dimmed"
+                            maw={400}
+                            style={{ fontFamily: "Geom, sans-serif" }}
+                        >
+                            An unexpected error occurred while displaying
+                            this section. Please try again.
+                        </Text>
+
+                        <Button
+                            leftIcon={<IconRefresh size={16} />}
+                            onClick={this.handleReset}
+                        >
+                            Try Again
                         </Button>
-                    </VStack>
-                </Box>
+                    </Stack>
+                </Center>
             );
         }
 
-        // If there is no error, renders the children components normally
         return this.props.children;
     }
 }

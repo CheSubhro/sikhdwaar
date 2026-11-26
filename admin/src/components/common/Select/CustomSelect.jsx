@@ -1,48 +1,64 @@
 
-import React from 'react';
-import { Box, Select, createListCollection } from '@chakra-ui/react';
+import { Select as MantineSelect } from "@mantine/core";
 
-const CustomSelect = ({ label, value, onValueChange, options = [], placeholder = "Select option", flex }) => {
-    
-    const collection = createListCollection({
-        items: options.map(opt => ({
-            label: opt.label || opt,
-            value: opt.value || opt
-        }))
-    });
-
+function CustomSelect({
+    label,
+    placeholder = "Select an option",
+    data = [],
+    value,
+    onChange,
+    error,
+    description,
+    required = false,
+    disabled = false,
+    searchable = false,
+    clearable = false,
+    size = "md",
+    ...props
+}) {
     return (
-        <Box flex={flex || "1"}>
-            {label && (
-                <label style={{ fontSize: '14px', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>
-                    {label}
-                </label>
-            )}
-            <Select.Root 
-                collection={collection}
-                value={[value]} 
-                onValueChange={(details) => {
-                    if (details.value && details.value.length > 0) {
-                        onValueChange(details.value[0]);
-                    }
-                }}
-            >
-                <Select.Trigger>
-                    <Select.ValueText placeholder={placeholder} />
-                </Select.Trigger>
-                <Select.Content portal>
-                    {collection.items.map((item) => (
-                        <Select.Item 
-                            key={item.value} 
-                            item={item}
-                        >
-                            {item.label}
-                        </Select.Item>
-                    ))}
-                </Select.Content>
-            </Select.Root>
-        </Box>
+        <MantineSelect
+            label={label}
+            placeholder={placeholder}
+            data={data}
+            value={value}
+            onChange={onChange}
+            error={error}
+            description={description}
+            required={required}
+            disabled={disabled}
+            searchable={searchable}
+            clearable={clearable}
+            size={size}
+            radius="md"
+            withAsterisk={required}
+            nothingFoundMessage="No options found"
+            styles={{
+                label: {
+                    fontFamily: "Geom, sans-serif",
+                    fontWeight: 600,
+                    marginBottom: 6,
+                },
+                input: {
+                    fontFamily: "Geom, sans-serif",
+                    borderColor: "#dce1e7",
+                },
+                dropdown: {
+                    fontFamily: "Geom, sans-serif",
+                },
+                option: {
+                    fontFamily: "Geom, sans-serif",
+                },
+                description: {
+                    fontFamily: "Geom, sans-serif",
+                },
+                error: {
+                    fontFamily: "Geom, sans-serif",
+                },
+            }}
+            {...props}
+        />
     );
-};
+}
 
 export default CustomSelect;
