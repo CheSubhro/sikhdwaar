@@ -25,6 +25,7 @@ import postRouter from "./routes/post.routes.js";
 import galleryRouter from "./routes/gallery.routes.js";
 import contactRouter from "./routes/contact.routes.js";
 import dashboardRouter from "./routes/dashboard.routes.js";
+import settingRouter from "./routes/setting.routes.js";
 
 //routes declaration
 app.use("/api/v1/auth", userRouter);
@@ -35,6 +36,7 @@ app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/gallery", galleryRouter);
 app.use("/api/v1/contacts", contactRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
+app.use("/api/v1/settings", settingRouter);
 
 
 export { app }

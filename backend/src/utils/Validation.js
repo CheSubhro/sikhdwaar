@@ -448,5 +448,99 @@ export const updateContactStatusSchema = z.object({
 });
 
 
+/* =========================================
+   Website Settings Validation
+========================================= */
+
+// Contact Information Validation
+const settingContactSchema = z.object({
+    email: z.string()
+        .trim()
+        .email("Invalid email address")
+        .max(150)
+        .or(z.literal(""))
+        .optional(),
+
+    phone: z.string()
+        .trim()
+        .max(20)
+        .optional(),
+
+    alternatePhone: z.string()
+        .trim()
+        .max(20)
+        .optional(),
+});
+
+// Address Validation
+const settingAddressSchema = z.object({
+    addressLine: z.string().trim().max(300).optional(),
+    city: z.string().trim().max(100).optional(),
+    district: z.string().trim().max(100).optional(),
+    state: z.string().trim().max(100).optional(),
+    pincode: z.string()
+        .trim()
+        .regex(/^\d{6}$/, "Invalid Indian PIN code")
+        .or(z.literal(""))
+        .optional(),
+    country: z.string().trim().max(100).optional(),
+});
+
+// Social Links Validation
+const settingSocialLinksSchema = z.object({
+    facebook: z.string().trim().url().or(z.literal("")).optional(),
+    instagram: z.string().trim().url().or(z.literal("")).optional(),
+    youtube: z.string().trim().url().or(z.literal("")).optional(),
+    x: z.string().trim().url().or(z.literal("")).optional(),
+});
+
+// SEO Validation
+const settingSeoSchema = z.object({
+    metaTitle: z.string().trim().max(70).optional(),
+    metaDescription: z.string().trim().max(320).optional(),
+    keywords: z.array(
+        z.string().trim().min(1).max(50)
+    ).max(30).optional(),
+});
+
+// Website Settings Validation
+export const updateSettingSchema = z.object({
+    siteName: z.string()
+        .trim()
+        .min(2, "Website name is required")
+        .max(100)
+        .optional(),
+
+    tagline: z.string()
+        .trim()
+        .max(200)
+        .optional(),
+
+    description: z.string()
+        .trim()
+        .max(2000)
+        .optional(),
+
+    contact: settingContactSchema.optional(),
+
+    address: settingAddressSchema.optional(),
+
+    socialLinks: settingSocialLinksSchema.optional(),
+
+    seo: settingSeoSchema.optional(),
+
+    footerDescription: z.string()
+        .trim()
+        .max(1000)
+        .optional(),
+
+    copyrightText: z.string()
+        .trim()
+        .max(300)
+        .optional(),
+});
+
+
+
 
 
